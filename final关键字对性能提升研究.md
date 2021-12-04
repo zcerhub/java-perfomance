@@ -62,13 +62,32 @@ final关键字在java中可以修饰变量、方法和类。
 
 ##### 匿名内部类来自外部闭包环境的自由变量必须是final
 
-常有以下几种情况：
+```
+public interface MyInterface {
+    void doSomething();
+}
+public class TryUsingAnonymousClass {
+    public void useMyInterface() {
+        final Integer number = 123;
+        System.out.println(number);
 
-- 
+        MyInterface myInterface = new MyInterface() {
+            @Override
+            public void doSomething() {
+                System.out.println(number);
+            }
+        };
+        myInterface.doSomething();
 
+        System.out.println(number);
+    }   
+```
 
+myInterface为匿名内部类的对象，调用doSomething方法时会依赖number变量，此时number需要声明为final（在java8中不声明也可以，详细《参考匿名内部类使用外部变量探究》）。
 
 ### 参考文献
 
 - [Java代码优化 Java final 修饰类或者方法能提高性能？还50%？老铁，你试了吗？]()
 - [请不要再说 Java 中 final 方法比非 final 性能更好了](https://cloud.tencent.com/developer/article/1338656)（这篇文章通过JMH测试和字节码分析比较了final和非final方法的区别比较有意思）
+
+- 匿名内部类使用外部变量探究
